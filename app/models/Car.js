@@ -1,32 +1,33 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const userScheme = new Schema({
+
+const carScheme = new Schema({
   number: {
     type: String,
-    required: true
+    required: true,
   },
   model: {
     type: String,
-    required: true
+    required: true,
   },
   lastService: {
-    type: String,
-    required: true
+    type: Date,
+    required: true,
   },
   problems: {
-    type: [Number],
-    required: false
+    type: [String],
+    required: false,
   },
   isRepairing: {
     type: Boolean,
     required: true,
-    default: false
+    default: false,
   },
   comments: {
     type: String,
-    required: false
-  }
+    required: false,
+  },
 });
-const Car = mongoose.model("Car", userScheme);
+const Car = mongoose.model("Car", carScheme);
 
 module.exports = Car;

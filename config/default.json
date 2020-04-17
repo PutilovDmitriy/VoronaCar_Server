@@ -1,0 +1,6 @@
+{
+    "port": 5000,
+    "url": "mongodb://localhost:27017/VoronaCar",
+    "secret-key": "voronacar",
+    "voronaId": "5e995020279e75b938df52bb"
+}
