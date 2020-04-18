@@ -11,7 +11,7 @@ router.get("/info", async (req, res) => {
     const cars = await Car.find();
 
     if (!cars) {
-      return res.status(400).json({ message: "Автомобил не найдены" });
+      return res.status(400).json({ message: "Автомобили не найдены" });
     }
 
     return res.status(200).json(cars);
@@ -115,7 +115,10 @@ router.put(
 
       return res
         .status(200)
-        .json({ message: "Данные об обслуживании успешно добавлены " });
+        .json({
+          message: "Данные об обслуживании успешно добавлены",
+          info: car,
+        });
     } catch (e) {
       res.status(500).json({ message: "Что то пошло не так" });
     }
