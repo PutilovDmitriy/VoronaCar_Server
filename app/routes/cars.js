@@ -113,12 +113,10 @@ router.put(
       await vorona.replaceOne(vorona);
       await car.replaceOne(car);
 
-      return res
-        .status(200)
-        .json({
-          message: "Данные об обслуживании успешно добавлены",
-          info: car,
-        });
+      return res.status(200).json({
+        message: "Данные об обслуживании успешно добавлены",
+        info: car,
+      });
     } catch (e) {
       res.status(500).json({ message: "Что то пошло не так" });
     }
@@ -158,7 +156,7 @@ router.put(
 
       const newVorona = new Vorona({
         _id: config.get("voronaId"),
-        valueOil,
+        valueOil: valueOil,
       });
 
       await newVorona.replaceOne(newVorona);
@@ -178,7 +176,7 @@ router.put(
     try {
       const { value } = req.body;
 
-      const vorona = await Vorona.findOne({ _id: "5e995020279e75b938df52bb" });
+      const vorona = await Vorona.findOne({ _id: config.get("voronaId") });
 
       if (!vorona) {
         return res.status(400).json({ message: "Автомобиль не найдены" });
@@ -188,7 +186,7 @@ router.put(
 
       const newVorona = new Vorona({
         _id: config.get("voronaId"),
-        valueOil,
+        valueOil: valueOil,
       });
 
       await newVorona.replaceOne(newVorona);
