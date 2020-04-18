@@ -131,7 +131,7 @@ router.get("/vorona", async (req, res) => {
       return res.status(400).json({ message: "Автомобиль не найдены" });
     }
 
-    return res.status(200).json(vorona);
+    return res.status(200).json(vorona.valueOil);
   } catch (e) {
     res.status(500).json({ message: "Что-то пошло не так" });
   }
