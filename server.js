@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const mongoose = require("mongoose");
 const config = require("config");
-const PORT = config.get("port") || 8000;
+const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/auth", require("./app/routes/user.auth"));
