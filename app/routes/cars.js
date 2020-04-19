@@ -70,7 +70,6 @@ router.put(
   [
     check("number", "Неверно указан гос номер").isLength({ min: 6 }),
     check("problems", "Неверный формат проблем").isArray(),
-    check("valueOil", "Отсутствуют данные о заправке").exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -86,9 +85,6 @@ router.put(
       const { number, problems, comments, valueOil } = req.body;
 
       const auto = await Car.findOne({ number });
-      const voronaAuto = await Vorona.findOne({
-        _id: config.get("voronaId"),
-      });
 
       if (!auto) {
         return res.status(400).json({ message: "Авто не найдено" });
@@ -106,14 +102,6 @@ router.put(
         comments: comments || "",
       });
 
-      const v = Number(voronaAuto.valueOil) - Number(valueOil);
-
-      const vorona = new Vorona({
-        _id: config.get("voronaId"),
-        valueOil: v,
-      });
-
-      await vorona.replaceOne(vorona);
       await car.replaceOne(car);
 
       return res.status(200).json({
