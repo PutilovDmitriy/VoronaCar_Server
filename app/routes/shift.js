@@ -87,6 +87,8 @@ router.put(
       // console.log(valueOil);
       // console.log(carsList);
 
+      console.log("TYT");
+
       const shift = new Shift({
         _id: shiftS._id,
         userId: shiftS.userId,
@@ -96,6 +98,8 @@ router.put(
         carsList: ["M483CP"],
         isFinished: false,
       });
+
+      console.log(shift);
 
       await shift.replaceOne(shift);
 
