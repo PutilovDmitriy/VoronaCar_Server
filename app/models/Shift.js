@@ -18,6 +18,10 @@ const shiftScheme = new Schema({
     type: Number,
     required: true,
   },
+  wash: {
+    type: Number,
+    required: true,
+  },
   carsList: {
     type: [String],
     required: false,

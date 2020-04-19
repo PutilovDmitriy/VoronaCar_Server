@@ -36,6 +36,7 @@ router.post(
         shiftStart: today,
         shiftTime: 0,
         valueOil: 0,
+        wash: 0,
         isFinished: false,
       });
 
@@ -55,6 +56,7 @@ router.put(
     check("shiftId", "Отсутствует Id").exists(),
     check("carNumber", "Машина отсутствует").exists(),
     check("value", "Отсутсвует колличество литров").exists(),
+    check("money", "Данные об оплане отсутствуют").exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -67,7 +69,7 @@ router.put(
     }
 
     try {
-      const { shiftId, carNumber, value } = req.body;
+      const { shiftId, carNumber, value, money } = req.body;
 
       const shiftS = await Shift.findOne({ _id: shiftId });
 
@@ -76,7 +78,7 @@ router.put(
       }
 
       const valueOil = Number(shiftS.valueOil) + Number(value);
-
+      const wash = Number(shiftS.wash) + Number(money);
       const carsList = [...shiftS.carsList, carNumber];
 
       const shift = new Shift({
@@ -85,6 +87,7 @@ router.put(
         shiftStart: shiftS.shiftStart,
         shiftTime: 0,
         valueOil: valueOil,
+        wash: wash,
         carsList: carsList,
         isFinished: false,
       });
@@ -132,6 +135,7 @@ router.put(
         shiftStart: dateS,
         shiftTime: m,
         valueOil: shiftS.valueOil,
+        wash: shifts.wash,
         carsList: shiftS.carsList,
         isFinished: true,
       });
