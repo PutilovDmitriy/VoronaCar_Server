@@ -127,7 +127,7 @@ router.put(
       const dateS = new Date(shiftS.shiftStart);
       const today = new Date(new Date().getTime() + 18000000);
 
-      let m = (today - dateS) / 1000 / 60;
+      const m = (today - dateS) / 1000 / 60;
 
       const shift = new Shift({
         _id: shiftS._id,
@@ -135,7 +135,7 @@ router.put(
         shiftStart: dateS,
         shiftTime: m,
         valueOil: shiftS.valueOil,
-        wash: shifts.wash,
+        wash: shiftS.wash,
         carsList: shiftS.carsList,
         isFinished: true,
       });
