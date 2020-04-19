@@ -77,9 +77,13 @@ router.post(
         return res.status(400).json({ message: "Логин или пароль не верны" });
       }
 
-      const token = jwt.sign({ userId: user.id }, config.get("secret-key"), {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        { userId: user.id, name: user.name, login: user.login },
+        config.get("secret-key"),
+        {
+          expiresIn: "1h",
+        }
+      );
 
       res.json({ token, userId: user.id, name: user.name, login: user.login });
     } catch (e) {
