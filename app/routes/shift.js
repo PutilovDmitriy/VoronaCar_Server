@@ -77,11 +77,7 @@ router.put(
 
       const valueOil = Number(shiftS.valueOil) + Number(value);
 
-      console.log(valueOil);
-
-      console.log(shiftS.carList);
-
-      const carsList = [...shiftS.carList, carNumber];
+      const carsList = [...shiftS.carsList, carNumber];
 
       const shift = new Shift({
         _id: shiftS._id,
@@ -92,8 +88,6 @@ router.put(
         carsList: carsList,
         isFinished: false,
       });
-
-      console.log(shift);
 
       await shift.replaceOne(shift);
 
