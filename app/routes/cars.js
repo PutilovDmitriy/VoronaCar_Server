@@ -105,9 +105,11 @@ router.put(
         comments: comments || "",
       });
 
+      const v = Number(voronaAuto.valueOil) - Number(valueOil);
+
       const vorona = new Vorona({
-        _id: "5e995020279e75b938df52bb",
-        valueOil: voronaAuto.valueOil - Number(valueOil),
+        _id: config.get("voronaId"),
+        valueOil: v,
       });
 
       await vorona.replaceOne(vorona);
