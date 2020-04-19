@@ -82,12 +82,7 @@ router.put(
       }
 
       const valueOil = Number(shiftS.valueOil) + Number(value);
-      // const carsList = [...shiftS.carList, carNumber];
-
-      // console.log(valueOil);
-      // console.log(carsList);
-
-      console.log("TYT");
+      const carsList = [...shiftS.carList, carNumber];
 
       const shift = new Shift({
         _id: shiftS._id,
@@ -95,7 +90,7 @@ router.put(
         shiftStart: shiftS.shiftStart,
         shiftTime: 0,
         valueOil: valueOil,
-        carsList: ["M483CP"],
+        carsList: carsList,
         isFinished: false,
       });
 
