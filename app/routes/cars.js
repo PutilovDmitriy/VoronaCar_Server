@@ -105,6 +105,9 @@ router.put(
         comments: comments || "",
       });
 
+      console.log(voronaAuto.valueOil);
+      console.log(valueOil);
+
       const v = Number(voronaAuto.valueOil) - Number(valueOil);
 
       console.log(v);
