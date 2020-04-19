@@ -86,7 +86,7 @@ router.put(
 
       const auto = await Car.findOne({ number });
       const voronaAuto = await Vorona.findOne({
-        _id: "5e995020279e75b938df52bb",
+        _id: config.get("voronaId"),
       });
 
       if (!auto) {
