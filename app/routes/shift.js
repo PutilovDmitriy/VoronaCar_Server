@@ -53,7 +53,7 @@ router.put(
   "/update",
   [
     check("shiftId", "Отсутствует Id").exists(),
-    check("carNumber", "Список машин отсутствует").exists(),
+    check("carNumber", "Машина отсутствует").exists(),
     check("value", "Отсутсвует колличество литров").exists(),
   ],
   async (req, res) => {
@@ -69,7 +69,13 @@ router.put(
     try {
       const { shiftId, carNumber, value } = req.body;
 
+      console.log(shiftId);
+      console.log(carNumber);
+      console.log(value);
+
       const shiftS = await Shift.findOne({ _id: shiftId });
+
+      console.log(shiftS);
 
       if (!shiftS) {
         return res.status(400).json({ message: "Такая смена не найдена" });
@@ -78,6 +84,9 @@ router.put(
       const valueOil = Number(shiftS.valueOil) + Number(value);
       const carsList = [...shiftS.carList, carNumber];
 
+      console.log(valueOil);
+      console.log(carsList);
+
       const shift = new Shift({
         _id: shiftS._id,
         userId: shiftS.userId,
@@ -85,7 +94,7 @@ router.put(
         shiftTime: 0,
         valueOil: valueOil,
         carsList: carsList,
-        isFinished: true,
+        isFinished: false,
       });
 
       await shift.replaceOne(shift);
