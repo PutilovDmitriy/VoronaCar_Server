@@ -107,10 +107,14 @@ router.put(
 
       const v = Number(voronaAuto.valueOil) - Number(valueOil);
 
+      console.log(v);
+
       const vorona = new Vorona({
         _id: config.get("voronaId"),
         valueOil: v,
       });
+
+      console.log(vorona);
 
       await vorona.replaceOne(vorona);
       await car.replaceOne(car);
