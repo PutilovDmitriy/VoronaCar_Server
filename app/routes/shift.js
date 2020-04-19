@@ -81,7 +81,7 @@ router.put(
         return res.status(400).json({ message: "Такая смена не найдена" });
       }
 
-      // const valueOil = Number(shiftS.valueOil) + Number(value);
+      const valueOil = Number(shiftS.valueOil) + Number(value);
       // const carsList = [...shiftS.carList, carNumber];
 
       // console.log(valueOil);
@@ -94,7 +94,7 @@ router.put(
         userId: shiftS.userId,
         shiftStart: shiftS.shiftStart,
         shiftTime: 0,
-        valueOil: 10,
+        valueOil: valueOil,
         carsList: ["M483CP"],
         isFinished: false,
       });
