@@ -69,19 +69,18 @@ router.put(
     try {
       const { shiftId, carNumber, value } = req.body;
 
-      console.log(shiftId);
-      console.log(carNumber);
-      console.log(value);
-
       const shiftS = await Shift.findOne({ _id: shiftId });
-
-      console.log(shiftS);
 
       if (!shiftS) {
         return res.status(400).json({ message: "Такая смена не найдена" });
       }
 
       const valueOil = Number(shiftS.valueOil) + Number(value);
+
+      console.log(valueOil);
+
+      console.log(shiftS.carList);
+
       const carsList = [...shiftS.carList, carNumber];
 
       const shift = new Shift({
