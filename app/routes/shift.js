@@ -81,20 +81,7 @@ router.put(
       const wash = Number(shiftS.wash) + Number(money);
       const carsList = [...shiftS.carsList, carNumber];
 
-      // const shift = new Shift({
-      //   _id: shiftS._id,
-      //   userId: shiftS.userId,
-      //   shiftStart: shiftS.shiftStart,
-      //   shiftTime: 0,
-      //   valueOil: valueOil,
-      //   wash: wash,
-      //   carsList: carsList,
-      //   isFinished: false,
-      // });
-
       await Shift.updateOne({ _id: shiftS._id }, { valueOil, wash, carsList });
-
-      // await shift.replaceOne(shift);
 
       return res.status(202).json({ message: "Данные о смене обновлены" });
     } catch (e) {
@@ -131,16 +118,10 @@ router.put(
 
       const m = (today - dateS) / 1000 / 60;
 
-      const shift = new Shift({
-        _id: shiftS._id,
-        userId: shiftS.userId,
-        shiftStart: dateS,
-        shiftTime: m,
-        valueOil: shiftS.valueOil,
-        wash: shiftS.wash,
-        carsList: shiftS.carsList,
-        isFinished: true,
-      });
+      await Shift.updateOne(
+        { _id: shiftS._id },
+        { shiftStart: dateS, shiftTime: m, isFinished: true }
+      );
 
       await shift.replaceOne(shift);
 
