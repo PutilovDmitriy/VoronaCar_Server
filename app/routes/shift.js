@@ -123,8 +123,6 @@ router.put(
         { shiftStart: dateS, shiftTime: m, isFinished: true }
       );
 
-      await shift.replaceOne(shift);
-
       return res.status(202).json({ message: "Данные о смене обновлены" });
     } catch (e) {
       res.status(500).json({ message: "Что то пошло не так" });
