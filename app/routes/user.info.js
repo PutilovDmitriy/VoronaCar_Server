@@ -6,7 +6,7 @@ const router = Router();
 //../user/list
 router.get("/list", async (req, res) => {
   try {
-    const users = await User.find({}, { password: false });
+    const users = await User.find({}, { password: false, __v: false });
 
     if (!users) {
       return res.status(400).json({ message: "Пользователи не найдены" });
