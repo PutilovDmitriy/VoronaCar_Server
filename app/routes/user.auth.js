@@ -10,7 +10,7 @@ const router = Router();
 router.post(
   "/register",
   [
-    check("login", "Некорректный login").isLength({ min: 1 }),
+    check("login", "Некорректный login").isLength({ min: 10 }),
     check("password", "Минимальная длинна пароля 6").isLength({ min: 6 }),
   ],
   async (req, res) => {
@@ -86,6 +86,55 @@ router.post(
       );
 
       res.json({ token, userId: user.id, name: user.name, login: user.login });
+    } catch (e) {
+      res.status(500).json({ message: "Что то пошло не так" });
+    }
+  }
+);
+
+//../auth/login/admin
+router.post(
+  "/login/admin",
+  [
+    check("login", "Некорректный login").isLength({ min: 10 }),
+    check("password", "Минимальная длинна пароля 6").exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+        message: "Некорректные данные при входе в систему",
+      });
+    }
+
+    try {
+      const { login, password } = req.body;
+
+      if (login !== "5245984202") {
+        return res
+          .status(400)
+          .json({ message: "Воспользуйтесь аккаунтом администратора" });
+      }
+
+      const user = await User.findOne({ login });
+
+      if (!user) {
+        return res.status(400).json({ message: "Пользователь не найден" });
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if (!isMatch) {
+        return res.status(400).json({ message: "Логин или пароль не верны" });
+      }
+
+      const token = jwt.sign({}, config.get("secret-key"), {
+        expiresIn: "1h",
+      });
+
+      res.json({ token });
     } catch (e) {
       res.status(500).json({ message: "Что то пошло не так" });
     }

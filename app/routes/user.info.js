@@ -15,9 +15,11 @@ router.get("/list", async (req, res) => {
       return res.status(400).json({ message: "Пользователи не найдены" });
     }
 
-    jwt.verify(token, config.get("secret-key"), (err, decode) => {
+    await jwt.verify(token, config.get("secret-key"), (err, decode) => {
       if (err) {
-        console.log("не получилось расшифровать");
+        return res
+          .status(400)
+          .json({ message: "Пользователь не верифицирован" });
       }
     });
 
