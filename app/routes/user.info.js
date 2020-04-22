@@ -1,16 +1,25 @@
 const { Router } = require("express");
 const { check, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 const User = require("../models/User");
 const router = Router();
 
 //../user/list
 router.get("/list", async (req, res) => {
+  const { token } = req.body;
   try {
     const users = await User.find({}, { password: false, __v: false });
 
     if (!users) {
       return res.status(400).json({ message: "Пользователи не найдены" });
     }
+
+    jwt.verify(token, config.get("secret-key"), (err, decode) => {
+      if (err) {
+        console.log("не получилось расшифровать");
+      }
+    });
 
     return res.status(200).json(users);
   } catch (e) {
