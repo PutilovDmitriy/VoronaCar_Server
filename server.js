@@ -16,7 +16,7 @@ app.use("/shift", require("./app/routes/shift"));
 
 async function start() {
   try {
-    await mongoose.connect(config.get("url"), {
+    await mongoose.connect(process.env.URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
