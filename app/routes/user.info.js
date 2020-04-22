@@ -3,6 +3,21 @@ const { check, validationResult } = require("express-validator");
 const User = require("../models/User");
 const router = Router();
 
+//../user/list
+router.get("/list", async (req, res) => {
+  try {
+    const users = await User.find({}, { password: false });
+
+    if (!users) {
+      return res.status(400).json({ message: "Пользователи не найдены" });
+    }
+
+    return res.status(200).json(users);
+  } catch (e) {
+    res.status(500).json({ message: "Что то пошло не так" });
+  }
+});
+
 //../user/:id
 router.delete("/:id", async (req, res) => {
   try {
