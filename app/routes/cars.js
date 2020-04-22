@@ -92,12 +92,12 @@ router.put(
 
       const today = new Date(new Date().getTime() + 18000000);
 
-      const car = await Car.updateOne(
+      await Car.updateOne(
         { _id: auto._id },
         { lastService: today, problems, comments: comments || "" }
       );
 
-      console.log(car);
+      const car = await Car.findOne({ _id: auto._id });
 
       return res.status(200).json({
         message: "Данные об обслуживании успешно добавлены",
