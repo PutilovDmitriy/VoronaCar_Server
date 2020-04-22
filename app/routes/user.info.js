@@ -16,7 +16,7 @@ router.get("/list", async (req, res) => {
       return res.status(400).json({ message: "Пользователи не найдены" });
     }
 
-    await jwt.verify(token, config.get("secret-key"), (err, decode) => {
+    await jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
       if (err) {
         return res
           .status(400)

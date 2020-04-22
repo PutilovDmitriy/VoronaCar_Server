@@ -1,5 +1,3 @@
 {
-    "url": "mongodb+srv://voronacaradmin:admin@cluster0-hl03q.mongodb.net/VoronaCar",
-    "secret-key": "voronacar",
-    "voronaId": "5e995020279e75b938df52bb"
+  "voronaId": "5e995020279e75b938df52bb"
 }
