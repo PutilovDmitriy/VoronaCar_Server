@@ -7,9 +7,7 @@ const router = Router();
 
 //../user/list
 router.get("/list", async (req, res) => {
-  const { token } = req.headers;
-  console.log(req.headers);
-  console.log(req.header("set-cookie"));
+  const token = req.headers.token;
 
   try {
     const users = await User.find({}, { password: false, __v: false });
