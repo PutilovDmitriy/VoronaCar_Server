@@ -24,7 +24,9 @@ router.get("/list", async (req, res) => {
       }
     });
 
-    return res.status(200).json(users);
+    const send = users.filter((user) => user.login !== "5245984202");
+
+    return res.status(200).json(send);
   } catch (e) {
     res.status(500).json({ message: "Что то пошло не так" });
   }
