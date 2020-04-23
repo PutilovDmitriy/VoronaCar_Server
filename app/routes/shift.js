@@ -133,7 +133,7 @@ router.put(
 //../shift/list
 router.get(
   "/list",
-  [check("userId", "Отсутствует Id").exists()],
+  [check("userid", "Отсутствует Id").exists()],
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -145,9 +145,7 @@ router.get(
     }
 
     try {
-      const userId = req.headers.userId;
-
-      console.log(req.headers);
+      const userId = req.headers.userid;
 
       const user = await User.findOne({ _id: userId });
 
