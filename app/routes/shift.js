@@ -147,7 +147,7 @@ router.get(
     try {
       const userId = req.headers.userId;
 
-      console.log(userId);
+      console.log(req.headers);
 
       const user = await User.findOne({ _id: userId });
 
