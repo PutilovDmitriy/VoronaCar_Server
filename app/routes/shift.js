@@ -147,13 +147,13 @@ router.get(
     try {
       const userId = req.headers.userid;
 
-      const candidate = await User.find({ _id: userId });
+      // const candidate = await User.find({ _id: userId });
 
-      if (!candidate) {
-        return res
-          .status(400)
-          .json({ message: "Такой пользователь не найден" });
-      }
+      // if (!candidate) {
+      //   return res
+      //     .status(400)
+      //     .json({ message: "Такой пользователь не найден" });
+      // }
 
       const shifts = await Shift.find({ userId: userId });
 
