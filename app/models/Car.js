@@ -1,6 +1,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const infoSchema = new Schema({
+  VIN: String,
+  STS: String,
+  OSAGO: String,
+  EndOSAGO: Date,
+  CodeM: String,
+  tel: String,
+  IMEI: String,
+});
+
 const carScheme = new Schema({
   number: {
     type: String,
@@ -27,6 +37,7 @@ const carScheme = new Schema({
     type: String,
     required: false,
   },
+  info: infoSchema,
 });
 const Car = mongoose.model("Car", carScheme);
 

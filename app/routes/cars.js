@@ -59,7 +59,7 @@ router.post(
 
       return res.status(201).json({ message: "Авто добавленно" });
     } catch (e) {
-      res.status(500).json({ message: "Что то пошло не так" });
+      res.status(500).json({ message: "Что-то пошло не так" });
     }
   }
 );
@@ -82,7 +82,7 @@ router.put(
     }
 
     try {
-      const { number, problems, comments, valueOil } = req.body;
+      const { number, problems, comments } = req.body;
 
       const auto = await Car.findOne({ number });
 
@@ -96,6 +96,46 @@ router.put(
         { _id: auto._id },
         { lastService: today, problems, comments: comments || "" }
       );
+
+      const car = await Car.findOne({ _id: auto._id });
+
+      return res.status(200).json({
+        message: "Данные об обслуживании успешно добавлены",
+        info: car,
+      });
+    } catch (e) {
+      res.status(500).json({ message: "Что то пошло не так" });
+    }
+  }
+);
+
+//../car/update
+router.put(
+  "/update",
+  [
+    check("number", "Отсутсвует номер авто").exists(),
+    check("info", "Данные").exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+        message: "Некорректные данные при обновлении информации",
+      });
+    }
+
+    try {
+      const { number, info } = req.body;
+
+      const auto = await Car.findOne({ number });
+
+      if (!auto) {
+        return res.status(400).json({ message: "Авто не найдено" });
+      }
+
+      await Car.updateOne({ _id: auto._id }, { info: info });
 
       const car = await Car.findOne({ _id: auto._id });
 
