@@ -135,6 +135,8 @@ router.get("/list/:id", async (req, res) => {
   try {
     const id = req;
 
+    console.log(req.params.id);
+
     const user = await User.findOne({ id });
 
     if (!user) {
