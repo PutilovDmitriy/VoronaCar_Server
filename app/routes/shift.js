@@ -130,4 +130,38 @@ router.put(
   }
 );
 
+//../shift/list
+router.get(
+  "/list",
+  [check("id", "Отсутствует Id").exists()],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+        message: "Некорректные данные при добавлении смены",
+      });
+    }
+
+    try {
+      const userId = req.headers.id;
+
+      const user = await User.findOne({ _id: userId });
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Такой пользователь не найден" });
+      }
+
+      const shifts = await Shift.find({ userId: user._id });
+
+      return res.status(200).json({ message: "Смена создана", shifts });
+    } catch (e) {
+      res.status(500).json({ message: "Что то пошло не так" });
+    }
+  }
+);
+
 module.exports = router;
