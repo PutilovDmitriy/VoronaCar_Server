@@ -151,6 +151,8 @@ router.get(
 
       const user = await User.findOne({ _id: userId });
 
+      console.log(user);
+
       if (!user) {
         return res
           .status(400)
