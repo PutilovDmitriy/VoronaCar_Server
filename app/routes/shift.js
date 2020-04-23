@@ -131,24 +131,37 @@ router.put(
 );
 
 //../shift/list
-router.get("/list/:id", async (req, res) => {
-  try {
-    const id = req;
+router.get(
+  "/list",
+  [check("userid", "Отсутствует userid").exists()],
+  async (req, res) => {
+    const errors = validationResult(req);
 
-    console.log(req.params.id);
-
-    const user = await User.findOne({ id });
-
-    if (!user) {
-      return res.status(400).json({ message: "Такой пользователь не найден" });
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+        message: "Некорректные данные при добавлении смены",
+      });
     }
 
-    const shifts = await Shift.find({ userId: userId });
+    try {
+      const userId = req.headers.userid;
 
-    return res.status(200).json({ shifts });
-  } catch (e) {
-    res.status(500).json({ message: "Что то пошло не так" });
+      const candidate = await User.find({ _id: userId });
+
+      if (!candidate) {
+        return res
+          .status(400)
+          .json({ message: "Такой пользователь не найден" });
+      }
+
+      const shifts = await Shift.find({ userId: userId });
+
+      return res.status(200).json({ shifts });
+    } catch (e) {
+      res.status(500).json({ message: "Что то пошло не так" });
+    }
   }
-});
+);
 
 module.exports = router;
