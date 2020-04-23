@@ -133,11 +133,9 @@ router.put(
 //../shift/list
 router.get("/list/:id", async (req, res) => {
   try {
-    const userId = req.params.id;
+    const id = req;
 
-    const user = await User.findOne({ _id: userId });
-
-    console.log(user);
+    const user = await User.findOne({ id });
 
     if (!user) {
       return res.status(400).json({ message: "Такой пользователь не найден" });
