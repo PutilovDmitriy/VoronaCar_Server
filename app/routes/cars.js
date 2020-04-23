@@ -135,7 +135,7 @@ router.put(
         return res.status(400).json({ message: "Авто не найдено" });
       }
 
-      await Car.updateOne({ _id: auto._id }, {$set{info: info} });
+      await Car.updateOne({ _id: auto._id }, { $set: { info: info } });
 
       const car = await Car.findOne({ _id: auto._id });
 
