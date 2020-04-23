@@ -149,13 +149,17 @@ router.get(
 
       const user = await User.findOne({ _id: userId });
 
+      console.log(user);
+
       if (!user) {
+        console.log("юзера нет");
+
         return res
           .status(400)
           .json({ message: "Такой пользователь не найден" });
       }
 
-      const shifts = await Shift.find({ userId: user._id });
+      const shifts = await Shift.find({ userId: userId });
 
       return res.status(200).json({ message: "Смена создана", shifts });
     } catch (e) {
