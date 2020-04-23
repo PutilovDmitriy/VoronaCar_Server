@@ -21,9 +21,7 @@ router.post(
     try {
       const { userId } = req.body;
 
-      const candidate = await User.findOne({ _id: userId }).catch((e) =>
-        console.log(e)
-      );
+      const candidate = await User.findOne({ _id: userId });
 
       if (!candidate) {
         return res
@@ -135,7 +133,7 @@ router.put(
 //../shift/list
 router.get(
   "/list",
-  [check("id", "Отсутствует Id").exists()],
+  [check("userId", "Отсутствует Id").exists()],
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -147,7 +145,7 @@ router.get(
     }
 
     try {
-      const userId = req.headers.id;
+      const userId = req.headers.userId;
 
       const user = await User.findOne({ _id: userId });
 
@@ -159,7 +157,7 @@ router.get(
 
       const shifts = await Shift.find({ userId: userId });
 
-      return res.status(200).json({ message: "Смена создана", shifts });
+      return res.status(200).json({ shifts });
     } catch (e) {
       res.status(500).json({ message: "Что то пошло не так" });
     }
