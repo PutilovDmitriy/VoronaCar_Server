@@ -21,7 +21,9 @@ router.post(
     try {
       const { userId } = req.body;
 
-      const candidate = await User.findOne({ _id: userId });
+      const candidate = await User.findOne({ _id: userId }).catch((e) =>
+        console.log(e)
+      );
 
       if (!candidate) {
         return res
@@ -147,15 +149,9 @@ router.get(
     try {
       const userId = req.headers.id;
 
-      console.log(userId);
-
-      const user = await User.find({ _id: userId });
-
-      console.log(user);
+      const user = await User.findOne({ _id: userId });
 
       if (!user) {
-        console.log("юзера нет");
-
         return res
           .status(400)
           .json({ message: "Такой пользователь не найден" });
