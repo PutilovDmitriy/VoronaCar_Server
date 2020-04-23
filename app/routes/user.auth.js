@@ -81,7 +81,7 @@ router.post(
         { userId: user.id, name: user.name, login: user.login },
         process.env.SECRET_KEY,
         {
-          expiresIn: "1h",
+          expiresIn: "100h",
         }
       );
 
