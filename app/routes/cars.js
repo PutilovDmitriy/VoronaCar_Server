@@ -38,7 +38,7 @@ router.post(
       });
     }
     try {
-      const { number, model } = req.body;
+      const { number, model, info } = req.body;
 
       const auto = await Car.findOne({ number });
 
