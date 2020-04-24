@@ -20,7 +20,7 @@ router.get("/info", async (req, res) => {
   }
 });
 
-//../car/add
+//../car/create
 router.post(
   "/create",
   [
@@ -57,9 +57,9 @@ router.post(
         info: info,
       });
 
-      await car.save();
+      const send = await car.save();
 
-      return res.status(201).json({ message: "Авто добавленно" });
+      return res.status(201).json(send);
     } catch (e) {
       res.status(500).json({ message: "Что-то пошло не так" });
     }
