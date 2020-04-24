@@ -5,8 +5,8 @@ const infoSchema = new Schema({
   VIN: String,
   STS: String,
   OSAGO: String,
-  EndOSAGO: Date,
-  CodeM: String,
+  dateOSAGO: Date,
+  code: String,
   tel: String,
   IMEI: String,
 });

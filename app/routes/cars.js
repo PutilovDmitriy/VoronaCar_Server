@@ -26,6 +26,7 @@ router.post(
   [
     check("number", "Неверно указан гос номер").isLength({ min: 6 }),
     check("model", "Модель отсутствует").exists(),
+    check("info", "Отсутсвует информация об авто").exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -53,6 +54,7 @@ router.post(
         lastService: today,
         isRepairing: false,
         comments: "",
+        info: info,
       });
 
       await car.save();
@@ -97,7 +99,10 @@ router.put(
         { lastService: today, problems, comments: comments || "" }
       );
 
-      const car = await Car.findOne({ _id: auto._id });
+      const car = await Car.findOne(
+        { _id: auto._id },
+        { info: false, _v: false }
+      );
 
       return res.status(200).json({
         message: "Данные об обслуживании успешно добавлены",
@@ -135,13 +140,18 @@ router.put(
         return res.status(400).json({ message: "Авто не найдено" });
       }
 
-      await Car.updateOne({ _id: auto._id }, { $set: { info: info } });
+      await Car.updateOne(
+        { _id: auto._id },
+        {
+          $set: info,
+        }
+      );
 
       const car = await Car.findOne({ _id: auto._id });
 
       return res.status(200).json({
         message: "Данные об обслуживании успешно добавлены",
-        info: car,
+        car: car,
       });
     } catch (e) {
       res.status(500).json({ message: "Что то пошло не так" });

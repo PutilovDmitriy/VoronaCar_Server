@@ -16,11 +16,14 @@ app.use("/shift", require("./app/routes/shift"));
 
 async function start() {
   try {
-    await mongoose.connect(process.env.URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    });
+    await mongoose.connect(
+      "mongodb+srv://voronacaradmin:admin@cluster0-hl03q.mongodb.net/VoronaCar",
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+      }
+    );
     app.listen(PORT, () => console.log("We are live on " + PORT));
   } catch (e) {
     console.log("Server error", e.message);
