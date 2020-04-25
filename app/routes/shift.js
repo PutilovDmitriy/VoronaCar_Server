@@ -149,7 +149,7 @@ router.get(
 
       const shifts = await Shift.find({ userId: userId });
 
-      return res.status(200).json({ shifts });
+      return res.status(200).json(shifts);
     } catch (e) {
       res.status(500).json({ message: "Что то пошло не так" });
     }
