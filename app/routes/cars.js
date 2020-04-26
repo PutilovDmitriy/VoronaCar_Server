@@ -140,19 +140,24 @@ router.put(
         return res.status(400).json({ message: "Авто не найдено" });
       }
 
+      const updateInfo = () => {
+        let newInfo = {};
+        for (let key in info) {
+          newInfo[`info.${key}`] = info[key];
+        }
+        return newInfo;
+      };
+
       await Car.updateOne(
         { _id: auto._id },
         {
-          $set: info,
+          $set: updateInfo(),
         }
       );
 
       const car = await Car.findOne({ _id: auto._id });
 
-      return res.status(200).json({
-        message: "Данные успешно обновленны",
-        car: car,
-      });
+      return res.status(200).json(car);
     } catch (e) {
       res.status(500).json({ message: "Что то пошло не так" });
     }
