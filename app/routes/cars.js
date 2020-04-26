@@ -150,7 +150,7 @@ router.put(
       const car = await Car.findOne({ _id: auto._id });
 
       return res.status(200).json({
-        message: "Данные об обслуживании успешно добавлены",
+        message: "Данные успешно обновленны",
         car: car,
       });
     } catch (e) {
