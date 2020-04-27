@@ -164,6 +164,25 @@ router.put(
   }
 );
 
+//../car/:number
+router.delete("/:number", async (req, res) => {
+  try {
+    const number = req.params.number;
+
+    const candidate = await Car.findOne({ number });
+
+    if (!candidate) {
+      return res.status(400).json({ message: "Такая машина не найдена" });
+    }
+
+    await Car.remove({ _id: candidate._id });
+
+    return res.status(200).json({ message: "Авто удалено удален" });
+  } catch (e) {
+    res.status(500).json({ message: "Что то пошло не так" });
+  }
+});
+
 //..car/vorona
 router.get("/vorona", async (req, res) => {
   try {
