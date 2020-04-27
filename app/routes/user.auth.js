@@ -37,7 +37,7 @@ router.post(
 
       await user.save();
 
-      const send = User.findOne({ login });
+      const send = await User.findOne({ login });
 
       return res.status(201).json(send);
     } catch (e) {
