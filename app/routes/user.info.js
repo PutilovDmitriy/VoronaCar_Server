@@ -44,8 +44,6 @@ router.put("/update", async (req, res) => {
       return res.status(400).json({ message: "Пользователи не найдены" });
     }
 
-    console.log(user);
-
     if (user.password) {
       const hashedPassword = await bcrypt.hash(user.password, 15);
       user.password = hashedPassword;

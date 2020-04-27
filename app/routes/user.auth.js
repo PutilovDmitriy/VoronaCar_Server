@@ -37,7 +37,9 @@ router.post(
 
       await user.save();
 
-      return res.status(201).json({ message: "Пользователь создан" });
+      const send = User.findOne({ login });
+
+      return res.status(201).json(send);
     } catch (e) {
       res.status(500).json({ message: "Что то пошло не так" });
     }
