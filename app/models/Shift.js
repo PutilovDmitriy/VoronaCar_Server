@@ -22,10 +22,12 @@ const shiftScheme = new Schema({
     type: Number,
     required: true,
   },
-  carsList: {
-    type: [String],
-    required: false,
-  },
+  carsList: [
+    {
+      number: { type: String },
+      value: { type: Number },
+    },
+  ],
   isFinished: {
     type: Boolean,
     required: true,

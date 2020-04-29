@@ -79,7 +79,7 @@ router.put(
 
       const valueOil = Number(shiftS.valueOil) + Number(value);
       const wash = Number(shiftS.wash) + Number(money);
-      const carsList = [...shiftS.carsList, carNumber];
+      const carsList = [...shiftS.carsList, { number: carNumber, value }];
 
       await Shift.updateOne({ _id: shiftS._id }, { valueOil, wash, carsList });
 
