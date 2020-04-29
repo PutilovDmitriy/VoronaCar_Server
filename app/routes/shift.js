@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const ObjectID = require("mongodb").ObjectID;
 const { check, validationResult } = require("express-validator");
 const User = require("../models/User");
 const Shift = require("../models/Shift");
@@ -140,7 +141,7 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array(),
-        message: "Некорректные данные при добавлении смены",
+        message: "Некорректные данные при получении смен",
       });
     }
 
@@ -148,6 +149,44 @@ router.get(
       const userId = req.headers.userid;
 
       const shifts = await Shift.find({ userId: userId });
+
+      return res.status(200).json(shifts);
+    } catch (e) {
+      res.status(500).json({ message: "Что то пошло не так" });
+    }
+  }
+);
+
+//../shift/delete
+router.delete(
+  "/delete",
+  [check("userid", "Отсутствует userid").exists()],
+  [check("ids", "Отсутсвуют данные").exists()],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+        message: "Некорректные данные удалении смены",
+      });
+    }
+
+    try {
+      const userId = req.headers.userid;
+      const idsString = req.headers.ids;
+
+      const ids = await idsString.split(",");
+
+      console.log(ids);
+
+      await ids.map(async (id) => {
+        await Shift.remove({ _id: new ObjectID(id) });
+      });
+
+      const shifts = await Shift.find({ userId: userId });
+
+      console.log(shifts);
 
       return res.status(200).json(shifts);
     } catch (e) {
