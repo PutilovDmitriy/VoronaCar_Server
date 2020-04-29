@@ -132,7 +132,7 @@ router.put(
     }
 
     try {
-      const { number, info } = req.body;
+      const { number, info, comments } = req.body;
 
       const auto = await Car.findOne({ number });
 
@@ -151,6 +151,7 @@ router.put(
       await Car.updateOne(
         { _id: auto._id },
         {
+          comments,
           $set: updateInfo(),
         }
       );
