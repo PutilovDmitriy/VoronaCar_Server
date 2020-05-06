@@ -251,10 +251,11 @@ clearDir = async (req, res, next) => {
 router.post(
   "/upload/:number",
   clearDir,
-  upload.array("imgCollection", 6),
+  upload.array("file", 6),
   async (req, res) => {
     try {
       const number = req.params.number;
+      console.log("tyt");
       const reqFiles = [];
       const url = "https://pacific-cliffs-72324.herokuapp.com/public";
       req.files.map((file) => {
