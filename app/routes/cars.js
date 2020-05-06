@@ -232,13 +232,15 @@ clearDir = async (req, res, next) => {
       if (err) throw err;
 
       for (const file of files) {
-        car.photos.map((url) => {
-          if (!url.includes(file)) {
-            fs.unlink(path.join(dir, file), (err) => {
-              if (err) throw err;
-            });
-          }
-        });
+        if (car.photos.length == 0) {
+          car.photos.map((url) => {
+            if (!url.includes(file)) {
+              fs.unlink(path.join(dir, file), (err) => {
+                if (err) throw err;
+              });
+            }
+          });
+        }
       }
     });
     next();
