@@ -249,7 +249,7 @@ clearDir = async (req, res, next) => {
 
 //../car/upload-images
 router.post(
-  "/upload-file/:number",
+  "/upload/:number",
   clearDir,
   upload.array("imgCollection", 6),
   async (req, res) => {
