@@ -227,20 +227,18 @@ clearDir = async (req, res, next) => {
   try {
     const dir = `./public/${req.params.number}`;
 
-    const car = Car.findOne({ userId: req.headers.userid });
+    const car = Car.findOne({ number: req.params.number });
     fs.readdir(dir, (err, files) => {
       if (err) throw err;
 
       for (const file of files) {
-        if (car.photos.length == 0) {
-          car.photos.map((url) => {
-            if (!url.includes(file)) {
-              fs.unlink(path.join(dir, file), (err) => {
-                if (err) throw err;
-              });
-            }
-          });
-        }
+        car.photos.map((url) => {
+          if (!url.includes(file)) {
+            fs.unlink(path.join(dir, file), (err) => {
+              if (err) throw err;
+            });
+          }
+        });
       }
     });
     next();
