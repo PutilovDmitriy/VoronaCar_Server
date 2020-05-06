@@ -96,9 +96,12 @@ router.put(
 
       await Car.updateOne(
         { _id: auto._id },
-        { lastService: today, problems, comments: comments || "" }
+        {
+          lastService: today,
+          problems,
+          comments: comments || "",
+        }
       );
-
       const car = await Car.findOne(
         { _id: auto._id },
         { info: false, _v: false }

@@ -178,15 +178,11 @@ router.delete(
 
       const ids = await idsString.split(",");
 
-      console.log(ids);
-
       await ids.map(async (id) => {
         await Shift.remove({ _id: new ObjectID(id) });
       });
 
       const shifts = await Shift.find({ userId: userId });
-
-      console.log(shifts);
 
       return res.status(200).json(shifts);
     } catch (e) {
