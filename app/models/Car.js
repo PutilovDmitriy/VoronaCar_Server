@@ -37,6 +37,10 @@ const carScheme = new Schema({
     type: String,
     required: false,
   },
+  photos: {
+    type: [String],
+    required: false,
+  },
   info: infoSchema,
 });
 const Car = mongoose.model("Car", carScheme);
