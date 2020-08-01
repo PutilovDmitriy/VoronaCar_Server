@@ -8,11 +8,26 @@ router.get("/info", async (req, res) => {
   try {
     const bot = await Bot.find();
 
-    if (!messages) {
-      res.status(404).send("Сообщения отсутсвуют");
+    if (!bot) {
+      res.status(404).json({ message: "Сообщения отсутствуют" });
     }
 
-    return res.status(200).json(bot);
+    const chats = [];
+
+    bot.map((message) => {
+      console.log(message);
+      const idx = chats.findIndex((ch) => ch.id === message.chatId);
+      if (idx >= 0) {
+        console.log(idx);
+        chats[idx].messages.push(message);
+      } else {
+        const newChat = { id: message.chatId, messages: [message] };
+        console.log(newChat);
+        chats.push(newChat);
+      }
+    });
+
+    return res.status(200).json(chats);
   } catch (e) {
     res.status(500).json({ message: "Что-то пошло не так" });
   }
@@ -60,6 +75,8 @@ router.post(
 router.post("/add", async (req, res) => {
   try {
     const { chatId, message } = req.body;
+
+    console.log(chatId);
 
     const bot = new Bot({
       chatId,
