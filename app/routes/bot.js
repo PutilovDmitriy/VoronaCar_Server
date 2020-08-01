@@ -36,7 +36,7 @@ router.get("/info", async (req, res) => {
 router.post(
   "/send",
   [
-    check("id", "id сообщения отсутствует").exists(),
+    check("_id", "id сообщения отсутствует").exists(),
     check("chatId", "Номер чата отсутствует").exists(),
     check("message", "Отсутствует сообщение").exists(),
   ],
@@ -50,9 +50,9 @@ router.post(
       });
     }
     try {
-      const { id, chatId, message } = req.body;
+      const { _id, chatId, message } = req.body;
 
-      const bot = await Bot.findOne({ _id: id });
+      const bot = await Bot.findOne({ _id: _id });
 
       if (!bot) {
         res.status(404).send("Нет сообщения на которое нужно ответить");
