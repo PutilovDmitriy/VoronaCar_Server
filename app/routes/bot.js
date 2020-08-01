@@ -55,7 +55,9 @@ router.post(
       const bot = await Bot.findOne({ _id: _id });
 
       if (!bot) {
-        res.status(404).send("Нет сообщения на которое нужно ответить");
+        res
+          .status(404)
+          .json({ message: "Нет сообщения на которое нужно ответить" });
       }
 
       const result = await fetch(
@@ -64,7 +66,7 @@ router.post(
 
       if (result.status === 200) {
         await Bot.remove({ _id: bot._id });
-        return res.status(200).send("Сообщение отправлено");
+        return res.status(200).json({ message: "Сообщение отправлено" });
       }
     } catch (e) {
       res.status(500).json({ message: "Что-то пошло не так" });
