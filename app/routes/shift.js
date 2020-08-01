@@ -45,7 +45,7 @@ router.post(
 
       return res.status(202).json({ message: "Смена создана", id: log._id });
     } catch (e) {
-      res.status(500).json({ message: "Что то пошло не так" });
+      res.status(500).json({ message: "Что-то пошло не так" });
     }
   }
 );
@@ -86,7 +86,7 @@ router.put(
 
       return res.status(202).json({ message: "Данные о смене обновлены" });
     } catch (e) {
-      res.status(500).json({ message: "Что то пошло не так" });
+      res.status(500).json({ message: "Что-то пошло не так" });
     }
   }
 );
@@ -126,7 +126,7 @@ router.put(
 
       return res.status(202).json({ message: "Данные о смене обновлены" });
     } catch (e) {
-      res.status(500).json({ message: "Что то пошло не так" });
+      res.status(500).json({ message: "Что-то пошло не так" });
     }
   }
 );
@@ -152,7 +152,7 @@ router.get(
 
       return res.status(200).json(shifts);
     } catch (e) {
-      res.status(500).json({ message: "Что то пошло не так" });
+      res.status(500).json({ message: "Что-то пошло не так" });
     }
   }
 );
@@ -186,7 +186,7 @@ router.delete(
 
       return res.status(200).json(shifts);
     } catch (e) {
-      res.status(500).json({ message: "Что то пошло не так" });
+      res.status(500).json({ message: "Что-то пошло не так" });
     }
   }
 );

@@ -29,7 +29,7 @@ router.get("/list", async (req, res) => {
 
     return res.status(200).json(send);
   } catch (e) {
-    res.status(500).json({ message: "Что то пошло не так" });
+    res.status(500).json({ message: "Что-то пошло не так" });
   }
 });
 
@@ -58,7 +58,7 @@ router.put("/update", async (req, res) => {
 
     return res.status(200).json(send);
   } catch (e) {
-    res.status(500).json({ message: "Что то пошло не так" });
+    res.status(500).json({ message: "Что-то пошло не так" });
   }
 });
 
@@ -77,7 +77,7 @@ router.delete("/:id", async (req, res) => {
 
     return res.status(200).json({ message: "Пользователь удален" });
   } catch (e) {
-    res.status(500).json({ message: "Что то пошло не так" });
+    res.status(500).json({ message: "Что-то пошло не так" });
   }
 });
 

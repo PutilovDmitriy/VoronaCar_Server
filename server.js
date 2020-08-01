@@ -13,6 +13,7 @@ app.use("/auth", require("./app/routes/user.auth"));
 app.use("/user", require("./app/routes/user.info"));
 app.use("/car", require("./app/routes/cars"));
 app.use("/shift", require("./app/routes/shift"));
+app.use("/bot", require("./app/routes/bot"));
 
 async function start() {
   try {

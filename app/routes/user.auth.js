@@ -41,7 +41,7 @@ router.post(
 
       return res.status(201).json(send);
     } catch (e) {
-      res.status(500).json({ message: "Что то пошло не так" });
+      res.status(500).json({ message: "Что-то пошло не так" });
     }
   }
 );
@@ -88,7 +88,7 @@ router.post(
 
       res.json({ token, userId: user.id, name: user.name, login: user.login });
     } catch (e) {
-      res.status(500).json({ message: "Что то пошло не так" });
+      res.status(500).json({ message: "Что-то пошло не так" });
     }
   }
 );
@@ -137,7 +137,7 @@ router.post(
 
       res.json({ token });
     } catch (e) {
-      res.status(500).json({ message: "Что то пошло не так" });
+      res.status(500).json({ message: "Что-то пошло не так" });
     }
   }
 );
