@@ -15,14 +15,11 @@ router.get("/info", async (req, res) => {
     const chats = [];
 
     bot.map((message) => {
-      console.log(message);
       const idx = chats.findIndex((ch) => ch.id === message.chatId);
       if (idx >= 0) {
-        console.log(idx);
         chats[idx].messages.push(message);
       } else {
         const newChat = { id: message.chatId, messages: [message] };
-        console.log(newChat);
         chats.push(newChat);
       }
     });
@@ -60,9 +57,11 @@ router.post(
           .json({ message: "Нет сообщения на которое нужно ответить" });
       }
 
-      const result = await fetch(
+      const URL = encodeURI(
         `https://api.telegram.org/bot${process.env.TOKEN}/sendMessage?chat_id=${chatId}&text=${message}`
       );
+
+      const result = await fetch(URL);
 
       if (result.status === 200) {
         await Bot.remove({ _id: bot._id });
@@ -77,8 +76,6 @@ router.post(
 router.post("/add", async (req, res) => {
   try {
     const { chatId, message } = req.body;
-
-    console.log(chatId);
 
     const bot = new Bot({
       chatId,
