@@ -9,7 +9,7 @@ const router = Router();
 router.post(
   "/register",
   [
-    check("login", "Некорректный login").isLength({ min: 10 }),
+    check("login", "Некорректный login").isLength({ min: 5 }),
     check("password", "Минимальная длинна пароля 6").isLength({ min: 6 }),
   ],
   async (req, res) => {
@@ -50,7 +50,7 @@ router.post(
 router.post(
   "/login",
   [
-    check("login", "Некорректный login").isLength({ min: 10 }),
+    check("login", "Некорректный login").isLength({ min: 5 }),
     check("password", "Минимальная длинна пароля 6").exists(),
   ],
   async (req, res) => {
@@ -97,7 +97,7 @@ router.post(
 router.post(
   "/login/admin",
   [
-    check("login", "Некорректный login").isLength({ min: 10 }),
+    check("login", "Некорректный login").isLength({ min: 5 }),
     check("password", "Минимальная длинна пароля 6").exists(),
   ],
   async (req, res) => {
@@ -113,16 +113,16 @@ router.post(
     try {
       const { login, password } = req.body;
 
-      if (login !== "5245984202") {
-        return res
-          .status(400)
-          .json({ message: "Воспользуйтесь аккаунтом администратора" });
-      }
-
       const user = await User.findOne({ login });
 
       if (!user) {
         return res.status(400).json({ message: "Пользователь не найден" });
+      }
+
+      if (!user.admin) {
+        return res
+          .status(400)
+          .json({ message: "Воспользуйтесь аккаунтом администратора" });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
