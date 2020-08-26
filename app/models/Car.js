@@ -24,6 +24,10 @@ const carScheme = new Schema({
     type: Date,
     required: true,
   },
+  lastWashDate: {
+    type: Date,
+    required: false,
+  },
   problems: {
     type: [String],
     required: false,

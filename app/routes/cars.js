@@ -84,7 +84,7 @@ router.put(
     }
 
     try {
-      const { number, problems, comments } = req.body;
+      const { number, problems, comments, isWashed } = req.body;
 
       const auto = await Car.findOne({ number });
 
@@ -94,12 +94,18 @@ router.put(
 
       const today = new Date(new Date().getTime() + 18000000);
 
+      let lastWashDate;
+      if (isWashed) {
+        lastWashDate = new Date(new Date().getTime() + 18000000);
+      }
+
       await Car.updateOne(
         { _id: auto._id },
         {
           lastService: today,
           problems,
           comments: comments || "",
+          lastWashDate,
         }
       );
       const car = await Car.findOne(
