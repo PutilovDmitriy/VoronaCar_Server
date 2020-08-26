@@ -86,7 +86,7 @@ router.post(
         }
       );
 
-      res.json({ token, userId: user.id, name: user.name, login: user.login });
+      res.status(200).json({ token, userId: user.id, name: user.name, login: user.login });
     } catch (e) {
       res.status(500).json({ message: "Что-то пошло не так" });
     }
@@ -135,7 +135,7 @@ router.post(
         expiresIn: "1h",
       });
 
-      res.json({ token });
+      res.status(200).json({ token });
     } catch (e) {
       res.status(500).json({ message: "Что-то пошло не так" });
     }
