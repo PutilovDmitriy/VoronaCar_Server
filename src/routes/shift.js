@@ -30,7 +30,7 @@ router.post(
           .json({ message: "Такой пользователь не найден" });
       }
 
-      const today = new Date(new Date().getTime() + 18000000);
+      const today = newDate();
 
       const shift = new Shift({
         userId: candidate._id,
@@ -115,7 +115,7 @@ router.put(
       }
 
       const dateS = new Date(shiftS.shiftStart);
-      const today = new Date(new Date().getTime() + 18000000);
+      const today = newDate();
 
       const m = (today - dateS) / 1000 / 60;
 

@@ -11,6 +11,11 @@ const infoSchema = new Schema({
   IMEI: String,
 });
 
+const eventsSchema = new Schema({
+  date: Date,
+  text: String,
+});
+
 const carScheme = new Schema({
   number: {
     type: String,
@@ -45,6 +50,7 @@ const carScheme = new Schema({
     type: [String],
     required: false,
   },
+  events: [eventsSchema],
   info: infoSchema,
 });
 const Car = mongoose.model("Car", carScheme);

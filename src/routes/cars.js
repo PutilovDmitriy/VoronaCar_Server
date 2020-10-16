@@ -1,4 +1,6 @@
 const { Router } = require("express");
+const ExcelJs = require('exceljs');
+const tempfile = require('tempfile');
 const config = require("config");
 const { check, validationResult } = require("express-validator");
 const Car = require("../models/Car");
@@ -46,7 +48,7 @@ router.post(
         return res.status(400).json({ message: "Такой авто уже существует" });
       }
 
-      const today = new Date(new Date().getTime() + 18000000);
+      const today = newDate();
 
       const car = new Car({
         number: number.toUpperCase(),
@@ -92,7 +94,7 @@ router.put(
         return res.status(400).json({ message: "Авто не найдено" });
       }
 
-      const today = new Date(new Date().getTime() + 18000000);
+      const today = newDate();
 
       let lastWashDate;
       if (isWashed) {
@@ -189,6 +191,58 @@ router.delete("/:number", async (req, res) => {
 
     return res.status(200).json({ message: "Авто удалено удален" });
   } catch (e) {
+    res.status(500).json({ message: "Что-то пошло не так" });
+  }
+});
+
+//..car/add-events
+router.post("/add-events", async (req, res) => {
+  try {
+    const { number, events } = req.body;
+
+    const candidate = await Car.findOne({ number });
+    if (!candidate) {
+      return res.status(400).json({ message: "Такая машина не найдена" });
+    }
+    const newEvents = events.map(event => ({ date: new Date(event.date), text: event.text }))
+    candidate.events.push(...newEvents);
+    await Car.update({ _id: candidate._id }, { events: candidate.events });
+
+    return res.status(200).json({ message: 'События добавлены' });
+  } catch (e) {
+    res.status(500).json({ message: "Что-то пошло не так" });
+  }
+});
+
+//..car/events
+router.get("/events/:number", async (req, res) => {
+  try {
+    const {number} = req.params;
+
+    const car = await Car.findOne({number});
+    if (!car) {
+      return res.status(400).json({message: "Такая машина не найдена"});
+    }
+    if (!car.events || car.events.length === 0) {
+      return res.status(400).json({message: "У авто нет доступных событий"});
+    }
+
+    const workbook = new ExcelJs.Workbook();
+    const worksheet = workbook.addWorksheet(`События по ${car.number}`);
+
+    worksheet.columns = [
+      {header: '№', key: 'id', width: 10},
+      {header: 'Дата', key: 'date', width: 32},
+      {header: 'Событие', key: 'event', width: 150}
+    ];
+    car.events.forEach((event, index) => {
+      worksheet.addRow({id: index + 1, date: new Intl.DateTimeFormat('ru').format(new Date(event.date)), event: event.text });
+    })
+
+    const tempFilePath = tempfile('.xlsx');
+    await workbook.xlsx.writeFile(tempFilePath)
+    return res.sendFile(tempFilePath);
+  } catch {
     res.status(500).json({ message: "Что-то пошло не так" });
   }
 });
