@@ -1,6 +1,7 @@
+const newDate = require("../utils/utils").newDate;
 const { Router } = require("express");
-const ExcelJs = require('exceljs');
-const tempfile = require('tempfile');
+const ExcelJs = require("exceljs");
+const tempfile = require("tempfile");
 const config = require("config");
 const { check, validationResult } = require("express-validator");
 const Car = require("../models/Car");
@@ -55,7 +56,6 @@ router.post(
         model,
         lastService: today,
         isRepairing: false,
-        comments: "",
         info: info,
       });
 
@@ -71,10 +71,7 @@ router.post(
 //../car/services
 router.put(
   "/services",
-  [
-    check("number", "Неверно указан гос номер").isLength({ min: 6 }),
-    check("problems", "Неверный формат проблем").isArray(),
-  ],
+  [check("number", "Неверно указан гос номер").isLength({ min: 6 })],
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -86,7 +83,7 @@ router.put(
     }
 
     try {
-      const { number, problems, comments, isWashed } = req.body;
+      const { number, problems, isWashed } = req.body;
 
       const auto = await Car.findOne({ number });
 
@@ -96,19 +93,17 @@ router.put(
 
       const today = newDate();
 
-      let lastWashDate;
+      const updateParams = {
+        lastService: today,
+        problems: problems,
+      }
+
       if (isWashed) {
-        lastWashDate = new Date(new Date().getTime() + 18000000);
+        updateParams.lastWashDate = new Date(new Date().getTime() + 18000000);
       }
 
       await Car.updateOne(
-        { _id: auto._id },
-        {
-          lastService: today,
-          problems,
-          comments: comments || "",
-          lastWashDate,
-        }
+        { _id: auto._id }, updateParams
       );
       const car = await Car.findOne(
         { _id: auto._id },
@@ -130,7 +125,6 @@ router.put(
   "/update",
   [
     check("number", "Отсутсвует номер авто").exists(),
-    check("info", "Данные").exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -143,7 +137,11 @@ router.put(
     }
 
     try {
-      const { number, info, comments } = req.body;
+      const { number, info, problems } = req.body;
+
+      if (!info && !problems) {
+        return res.status(400).json({ message: "Нет данных для обновления" });
+      }
 
       const auto = await Car.findOne({ number });
 
@@ -151,25 +149,32 @@ router.put(
         return res.status(400).json({ message: "Авто не найдено" });
       }
 
+      let params = {};
+
       const updateInfo = () => {
-        let newInfo = {};
         for (let key in info) {
-          newInfo[`info.${key}`] = info[key];
+          params[`info.${key}`] = info[key];
         }
         return newInfo;
       };
+      if (info) {
+        params = updateInfo();
+      }
+      if (problems) {
+        params.problems = problems;
+      }
 
-      await Car.updateOne(
+      const car = await Car.findOneAndUpdate(
         { _id: auto._id },
         {
-          comments,
-          $set: updateInfo(),
+          $set: params,
+        },
+        {
+          new: true,
         }
       );
 
-      const car = await Car.findOne({ _id: auto._id });
-
-      return res.status(200).json(car);
+      return res.status(200).json({info: car, message: 'Данные успешно обновлены'});
     } catch (e) {
       res.status(500).json({ message: "Что-то пошло не так" });
     }
@@ -195,20 +200,58 @@ router.delete("/:number", async (req, res) => {
   }
 });
 
+//..car/add-problem
+router.post(
+  "/add-problem",
+  [
+    check("number", "Отсутсвует номер авто").exists(),
+    check("problem", "Проблема отсутствует").exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+        message: "Некорректные данные при обновлении информации",
+      });
+    }
+    try {
+      const { number, problem } = req.body;
+
+      const car = await Car.findOne({ number });
+
+      if (!car) {
+        return res.status(404).send("Авто не найдено");
+      }
+
+      const newCar = Car.findOneAndUpdate(
+        { _id: car._id },
+        { $push: { problems: problem } },
+        { new: true }
+      );
+
+      return res.status(202).send({ car: newCar });
+    } catch (e) {
+      res.status(500).json({ message: "Что-то пошло не так" });
+    }
+  }
+);
+
 //..car/add-events
 router.post("/add-events", async (req, res) => {
   try {
-    const { number, events } = req.body;
+    const { number, event } = req.body;
 
-    const candidate = await Car.findOne({ number });
-    if (!candidate) {
+    const car = await Car.findOne({ number: number.toUpperCase() });
+    if (!car) {
       return res.status(400).json({ message: "Такая машина не найдена" });
     }
-    const newEvents = events.map(event => ({ date: new Date(event.date), text: event.text }))
-    candidate.events.push(...newEvents);
-    await Car.update({ _id: candidate._id }, { events: candidate.events });
+    event.date = new Date(event.date);
+    event.mileage = Number(event.mileage);
+    console.log(event, car)
+    await Car.update({ _id: car._id }, { $push: {events: event } });
 
-    return res.status(200).json({ message: 'События добавлены' });
+    return res.status(200).json({ message: "События добавлены" });
   } catch (e) {
     res.status(500).json({ message: "Что-то пошло не так" });
   }
@@ -217,30 +260,36 @@ router.post("/add-events", async (req, res) => {
 //..car/events
 router.get("/events/:number", async (req, res) => {
   try {
-    const {number} = req.params;
+    const { number } = req.params;
 
-    const car = await Car.findOne({number});
+    const car = await Car.findOne({ number });
     if (!car) {
-      return res.status(400).json({message: "Такая машина не найдена"});
+      return res.status(400).json({ message: "Такая машина не найдена" });
     }
     if (!car.events || car.events.length === 0) {
-      return res.status(400).json({message: "У авто нет доступных событий"});
+      return res.status(400).json({ message: "У авто нет доступных событий" });
     }
 
     const workbook = new ExcelJs.Workbook();
     const worksheet = workbook.addWorksheet(`События по ${car.number}`);
 
     worksheet.columns = [
-      {header: '№', key: 'id', width: 10},
-      {header: 'Дата', key: 'date', width: 32},
-      {header: 'Событие', key: 'event', width: 150}
+      { header: "№", key: "id", width: 10 },
+      { header: "Дата", key: "date", width: 32 },
+      { header: "Пробег", key: "mileage", width: 32 },
+      { header: "Событие", key: "event", width: 150 },
     ];
     car.events.forEach((event, index) => {
-      worksheet.addRow({id: index + 1, date: new Intl.DateTimeFormat('ru').format(new Date(event.date)), event: event.text });
-    })
+      worksheet.addRow({
+        id: index + 1,
+        date: new Intl.DateTimeFormat("ru").format(new Date(event.date)),
+        mileage: event.mileage,
+        event: event.text,
+      });
+    });
 
-    const tempFilePath = tempfile('.xlsx');
-    await workbook.xlsx.writeFile(tempFilePath)
+    const tempFilePath = tempfile(".xlsx");
+    await workbook.xlsx.writeFile(tempFilePath);
     return res.sendFile(tempFilePath);
   } catch {
     res.status(500).json({ message: "Что-то пошло не так" });

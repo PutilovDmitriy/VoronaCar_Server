@@ -12,10 +12,11 @@ app.use("/auth", require("./routes/user.auth"));
 app.use("/user", require("./routes/user.info"));
 app.use("/car", require("./routes/cars"));
 app.use("/shift", require("./routes/shift"));
+app.use("/service-record", require("./routes/serviceRecord"));
 
 async function start() {
   try {
-    await mongoose.connect('mongodb+srv://vorona-master:tyOBjpQbo81ETkdI@voronacar-shmzb.mongodb.net/ServiceApp', {
+    await mongoose.connect(process.env.URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,

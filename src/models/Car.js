@@ -12,6 +12,7 @@ const infoSchema = new Schema({
 });
 
 const eventsSchema = new Schema({
+  mileage: Number,
   date: Date,
   text: String,
 });
@@ -41,10 +42,6 @@ const carScheme = new Schema({
     type: Boolean,
     required: true,
     default: false,
-  },
-  comments: {
-    type: String,
-    required: false,
   },
   photos: {
     type: [String],
