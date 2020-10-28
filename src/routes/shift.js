@@ -1,8 +1,11 @@
+const newDate = require("../utils/utils").newDate;
+
 const { Router } = require("express");
 const ObjectID = require("mongodb").ObjectID;
 const { check, validationResult } = require("express-validator");
 const User = require("../models/User");
 const Shift = require("../models/Shift");
+const ServiceRecord = require("../models/ServiceRecord");
 const router = Router();
 
 //../shift/start
@@ -30,7 +33,7 @@ router.post(
           .json({ message: "Такой пользователь не найден" });
       }
 
-      const today = new Date(new Date().getTime() + 18000000);
+      const today = newDate();
 
       const shift = new Shift({
         userId: candidate._id,
@@ -56,8 +59,6 @@ router.put(
   [
     check("shiftId", "Отсутствует Id").exists(),
     check("carNumber", "Машина отсутствует").exists(),
-    check("value", "Отсутсвует колличество литров").exists(),
-    check("money", "Данные об оплане отсутствуют").exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -70,7 +71,7 @@ router.put(
     }
 
     try {
-      const { shiftId, carNumber, value, money } = req.body;
+      const { shiftId, carNumber, value, fromGS, money } = req.body;
 
       const shiftS = await Shift.findOne({ _id: shiftId });
 
@@ -84,6 +85,15 @@ router.put(
 
       await Shift.updateOne({ _id: shiftS._id }, { valueOil, wash, carsList });
 
+      const serviceRecord = new ServiceRecord({
+        date: newDate(),
+        number: carNumber,
+        valueOil: value,
+        fromGS: fromGS,
+        wash: money,
+      });
+
+      await serviceRecord.save();
       return res.status(202).json({ message: "Данные о смене обновлены" });
     } catch (e) {
       res.status(500).json({ message: "Что-то пошло не так" });
@@ -115,7 +125,7 @@ router.put(
       }
 
       const dateS = new Date(shiftS.shiftStart);
-      const today = new Date(new Date().getTime() + 18000000);
+      const today = newDate();
 
       const m = (today - dateS) / 1000 / 60;
 

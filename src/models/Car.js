@@ -11,6 +11,12 @@ const infoSchema = new Schema({
   IMEI: String,
 });
 
+const eventsSchema = new Schema({
+  mileage: Number,
+  date: Date,
+  text: String,
+});
+
 const carScheme = new Schema({
   number: {
     type: String,
@@ -37,14 +43,11 @@ const carScheme = new Schema({
     required: true,
     default: false,
   },
-  comments: {
-    type: String,
-    required: false,
-  },
   photos: {
     type: [String],
     required: false,
   },
+  events: [eventsSchema],
   info: infoSchema,
 });
 const Car = mongoose.model("Car", carScheme);
