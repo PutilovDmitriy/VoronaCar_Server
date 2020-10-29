@@ -290,7 +290,7 @@ router.get("/events/:number", async (req, res) => {
 
     const tempFilePath = tempfile(".xlsx");
     await workbook.xlsx.writeFile(tempFilePath);
-    return res.sendFile(tempFilePath);
+    return res.status(200).sendFile(tempFilePath);
   } catch {
     res.status(500).json({ message: "Что-то пошло не так" });
   }
