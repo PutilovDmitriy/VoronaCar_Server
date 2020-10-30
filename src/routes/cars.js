@@ -150,10 +150,12 @@ router.put(
       }
 
       let params = {};
-
       const updateInfo = () => {
+        const newInfo = {}
         for (let key in info) {
-          params[`info.${key}`] = info[key];
+          if (info.hasOwnProperty(key)) {
+            newInfo[`info.${key}`] = info[key];
+          }
         }
         return newInfo;
       };
@@ -170,7 +172,7 @@ router.put(
           $set: params,
         },
         {
-          new: true,
+          new: true
         }
       );
 
@@ -290,44 +292,7 @@ router.get("/events/:number", async (req, res) => {
 
     const tempFilePath = tempfile(".xlsx");
     await workbook.xlsx.writeFile(tempFilePath);
-    return res.status(200).sendFile(tempFilePath);
-  } catch {
-    res.status(500).json({ message: "Что-то пошло не так" });
-  }
-});
 
-router.post("/events/:number", async (req, res) => {
-  try {
-    const { number } = req.params;
-
-    const car = await Car.findOne({ number });
-    if (!car) {
-      return res.status(400).json({ message: "Такая машина не найдена" });
-    }
-    if (!car.events || car.events.length === 0) {
-      return res.status(400).json({ message: "У авто нет доступных событий" });
-    }
-
-    const workbook = new ExcelJs.Workbook();
-    const worksheet = workbook.addWorksheet(`События по ${car.number}`);
-
-    worksheet.columns = [
-      { header: "№", key: "id", width: 10 },
-      { header: "Дата", key: "date", width: 32 },
-      { header: "Пробег", key: "mileage", width: 32 },
-      { header: "Событие", key: "event", width: 150 },
-    ];
-    car.events.forEach((event, index) => {
-      worksheet.addRow({
-        id: index + 1,
-        date: new Intl.DateTimeFormat("ru").format(new Date(event.date)),
-        mileage: event.mileage,
-        event: event.text,
-      });
-    });
-
-    const tempFilePath = tempfile(".xlsx");
-    await workbook.xlsx.writeFile(tempFilePath);
     return res.status(200).sendFile(tempFilePath);
   } catch {
     res.status(500).json({ message: "Что-то пошло не так" });
