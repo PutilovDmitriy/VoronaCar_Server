@@ -35,6 +35,7 @@ router.get(
                 {header: '№', key: 'id', width: 10},
                 {header: 'Дата', key: 'date', width: 32},
                 {header: 'Номер ТС', key: 'number', width: 20, height: 2},
+                {header: 'Кол-во литров', key: 'valueOil', width: 20, height: 2},
                 {header: 'Заправлено на АЗС', key: 'fromGS', width: 20},
                 {header: 'Мойка (руб)', key: 'wash', width: 15},
 
@@ -47,6 +48,7 @@ router.get(
                             id: index + 1,
                             date: new Intl.DateTimeFormat('ru', optionsDate).format(new Date(record.date)),
                             number: record.number,
+                            valueOil: record.valueOil,
                             fromGS: record.fromGS ? 'Да' : '',
                             wash: record.wash
                         }
